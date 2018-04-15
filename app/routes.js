@@ -11,6 +11,7 @@ const UserController  = require("./controllers/UserController");
         // UserRoutes.use(Auth);
         UserRoutes.get('/', Auth, UserController.index);
         UserRoutes.post('/authenticate', UserController.authenticate);
+        UserRoutes.post('/create', UserController.create);
         UserRoutes.get('/get', Auth, function(req, res) {
             res.json({ message: 'Welcome to the coolest API on earth!' });
         });

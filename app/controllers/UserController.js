@@ -9,6 +9,8 @@ module.exports = (function(req, res){
             res.json(users);
         });
     }
+
+
     function authenticate (req, res) {
         let plainPassword = req.body.password;
         let username = req.body.username;
@@ -28,7 +30,7 @@ module.exports = (function(req, res){
                 } else {
 
                     const payload = {
-                        admin: user.admin	
+                        admin: user.email	
                     };
                     const token = jwt.sign(payload, config.secret, {
                         expiresIn: 86400 // expires in 24 hours
@@ -45,8 +47,38 @@ module.exports = (function(req, res){
     
         });
     }
+
+    function create(req, res){
+        var user = new User({ 
+            name: req.body.name,
+            password: req.body.password,
+            email: req.body.email,
+            username: req.body.username,
+            // admin: false 
+        });
+        user.save(function(err) {
+            if (err) throw err;
+    
+            console.log('User saved successfully');
+            res.json({ success: true, user: user });
+        });
+    
+        console.log(user.speak());
+    }
+
+    function edit(req, res){
+        // Get Logged from jwt, can use Auth middleware here
+    }
+
+    function destroy(req, res){
+        // Get Logged from jwt, can use Auth middleware here
+    }
+
     return {
         index: index,
+        create: create,
+        edit: edit,
+        destroy: destroy,
         authenticate: authenticate
     };
 })();
