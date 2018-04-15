@@ -9,13 +9,17 @@ const config = require('../../config'); // get our config file
 // set up a mongoose model
 const UserSchema = new Schema({
     name: String,
-    username: { type: String, index: { unique: true, dropDups: true } },
+    username: { 
+        type: String, 
+        lowercase: true,
+        index: { unique: true, dropDups: true } 
+    },
     password: { type: String, required: true },
     email: {
         type: String,
         trim: true,
         lowercase: true,
-        unique: true,
+        index: { unique: true, dropDups: true },
         required: 'Email address is required',
         validate: [isEmail, 'Please fill a valid email address'],
     },

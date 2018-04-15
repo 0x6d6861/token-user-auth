@@ -1,3 +1,6 @@
+const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
 const express = require('express');
 const app         = express();
 const bodyParser  = require('body-parser');
@@ -9,6 +12,20 @@ const User   = require('./app/models/User');
 
 const port = process.env.PORT || 8080;
 require('./database');// secret variable
+
+
+if (cluster.isMaster) {
+	console.log(`Master ${process.pid} is running`);
+  
+	// Fork workers.
+	for (let i = 0; i < numCPUs; i++) {
+	  cluster.fork();
+	}
+  
+	cluster.on('exit', (worker, code, signal) => {
+	  console.log(`worker ${worker.process.pid} died`);
+	});
+  } else {
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -54,3 +71,6 @@ app.use('/api', apiRoutes.User);
 
 app.listen(port);
 console.log('Magic happens at http://localhost:' + port);
+console.log(`Worker ${process.pid} started`);
+
+}
