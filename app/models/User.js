@@ -50,14 +50,7 @@ UserSchema.pre('update', function (next) {
 //===============END BAD CODE===================
 
 UserSchema.methods.checkPassword = function (password) {
-
-    bcrypt.compare(password, this.password).then(function(err, res) {
-        if(!err){
-            console.info("Password is correct");
-            return true;
-        }
-    });
-	return false;
+    return bcrypt.compare(password, this.password)
 };
 
 UserSchema.set('toJSON', {

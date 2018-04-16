@@ -24,25 +24,27 @@ module.exports = (function(req, res){
             if (!user) {
                 res.json({ success: false, message: 'Authentication failed. User not found.' });
             } else if (user) {
-                // check if password matches
-                if (user.checkPassword(plainPassword)) {
-                    res.json({ success: false, message: 'Authentication failed. Wrong password.' });
-                } else {
 
-                    const payload = {
-                        admin: user.email	
-                    };
-                    const token = jwt.sign(payload, config.secret, {
-                        expiresIn: 86400 // expires in 24 hours
-                    });
-    
-                    res.json({
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token: token
-                    });
-                }		
-    
+                user.checkPassword(plainPassword).then(function(data){
+                    // console.log(data);
+                    if(data === true){
+                        const payload = {
+                            admin: user.email	
+                        };
+                        const token = jwt.sign(payload, config.secret, {
+                            expiresIn: 86400 // expires in 24 hours
+                        });
+        
+                        res.json({
+                            success: true,
+                            message: 'Enjoy your token!',
+                            token: token
+                        });
+                    }else{
+                        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+                    }
+                })
+          
             }
     
         });
