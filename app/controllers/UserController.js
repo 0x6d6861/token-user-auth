@@ -37,8 +37,9 @@ module.exports = (function(req, res){
         
                         res.json({
                             success: true,
-                            message: 'Enjoy your token!',
-                            token: token
+                            message: 'Login Successful',
+                            token: token,
+                            user: user
                         });
                     }else{
                         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
