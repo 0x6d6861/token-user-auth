@@ -2,7 +2,7 @@
 const mongoose    = require('mongoose');
 const config = require('../config');
 module.exports = (function () {
-    mongoose.connect(config.database).then(function () {
+    mongoose.connect(config.database, { useNewUrlParser: true }).then(function () {
         const db = mongoose.connection;
         db.on('error', console.error.bind(console, 'connection error:'));
         db.once('open', function() {

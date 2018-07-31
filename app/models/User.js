@@ -23,7 +23,10 @@ const UserSchema = new Schema({
         required: 'Email address is required',
         validate: [isEmail, 'Please fill a valid email address'],
     },
-    admin: { type: Boolean }
+    admin: { 
+        type: Boolean,
+        default: false
+    }
 });
 
 UserSchema.methods.speak = function () {
@@ -31,7 +34,6 @@ UserSchema.methods.speak = function () {
 };
 
 
-//===============BAD CODE===================
 UserSchema.pre('save', function (next) {
     const _self = this;
     bcrypt.hash(this.password, config.saltRounds).then(function(hash) {
@@ -42,12 +44,13 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.pre('update', function (next) {
     const _self = this;
-    bcrypt.hash(this.password, config.saltRounds).then(function(hash) {
-        _self.password = hash;
-        next();
-    });
+    if (this.isModified("password")) {
+        bcrypt.hash(this.password, config.saltRounds).then(function(hash) {
+            _self.password = hash;
+            next();
+        });
+      }
 });
-//===============END BAD CODE===================
 
 UserSchema.methods.checkPassword = function (password) {
     return bcrypt.compare(password, this.password)

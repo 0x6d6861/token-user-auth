@@ -2,6 +2,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const config = require('../../config');
+var validator = require('validator');
+
 
 module.exports = (function(req, res){
     function index (req, res){
@@ -11,10 +13,19 @@ module.exports = (function(req, res){
     }
 
 
+
     function authenticate (req, res) {
-        let plainPassword = req.body.password;
-        let username = req.body.username;
-        let email = req.body.email;
+        let plainPassword = validator.escape(req.body.password);
+        let username = validator.escape(req.body.username);
+        let email = validator.escape(req.body.email);
+
+        if(email && !validator.isEmail(email)){
+            res.status(401).send({
+                success: false,
+                message: "Invalid email format"
+            });
+        }
+
         User.findOne({
             $or: [{username : username}, { email: email}]
         }, function(err, user) {
@@ -52,21 +63,45 @@ module.exports = (function(req, res){
     }
 
     function create(req, res){
-        var user = new User({ 
-            name: req.body.name,
-            password: req.body.password,
-            email: req.body.email,
-            username: req.body.username,
-            // admin: false 
-        });
-        user.save(function(err) {
+
+        let name = validator.escape(req.body.name);
+        let username = validator.escape(req.body.username);
+        let email = validator.escape(req.body.email);
+        let password = req.body.password;
+
+        if(email && !validator.isEmail(email)){
+            res.status(401).send({
+                success: false,
+                message: "Invalid email format"
+            });
+        }
+
+        User.findOne({
+            $or: [{username : username}, { email: email}]
+        }, function(err, user) {
+
             if (err) throw err;
     
-            console.log('User saved successfully');
-            res.json({ success: true, user: user });
-        });
+            if (user) {
+                res.json({ success: false, message: 'User with the provided details already exists' });
+            }
+
+            var newUser = new User({ 
+                name: name,
+                password: password,
+                email: email,
+                username: username,
+                // admin: false 
+            });
     
-        console.log(user.speak());
+            newUser.save(function(err) {
+                if (err) throw err;
+                res.json({ success: true, user: newUser });
+            });
+        
+
+        });
+
     }
 
     function edit(req, res){

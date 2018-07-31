@@ -36,21 +36,21 @@ app.use(morgan('dev'));
 
 app.get('/setup', function(req, res) {
 	// create a sample user
-	var nick = new User({ 
+	var heri = new User({ 
 		name: 'Heri Agape',
 		password: 'password',
 		email: 'agape@live.fr',
 		username: 'heri',
 		admin: true 
 	});
-	nick.save(function(err) {
+	heri.save(function(err) {
 		if (err) throw err;
 
 		console.log('User saved successfully');
 		res.json({ success: true });
 	});
 
-	console.log(nick.speak());
+	console.log(heri.speak());
 });
 
 app.get('/', function(req, res) {
