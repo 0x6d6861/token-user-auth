@@ -1,5 +1,5 @@
 module.exports = {
-	secret: 'super-secret',
+	secret: 'super-secret', // generate this and use Base64 if you want
 	database: 'mongodb://127.0.0.1:27017/authentication',
 	saltRounds : 10,
 	smtpConfig: {
@@ -8,11 +8,7 @@ module.exports = {
         secure: true, // secure:true for port 465, secure:false for port 587
         auth: {
             user: 'heri@heri.co',
-            pass: 'K3rJgkKRyj5R'
+            pass: 'your-password'
         },
-        tls: {
-            // do not fail on invalid certs
-            rejectUnauthorized: false
-        }
     }
 };
