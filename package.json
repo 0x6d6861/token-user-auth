@@ -4,6 +4,8 @@
   "dependencies": {
     "bcrypt": "^2.0.1",
     "body-parser": "^1.15.0",
+    "ejs": "^2.6.1",
+    "email-templates": "^4.0.3",
     "express": "^4.13.4",
     "jsonwebtoken": "^8.2.0",
     "mongoose": "^5.0.11",

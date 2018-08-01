@@ -54,6 +54,11 @@ app.get('/setup', function(req, res) {
 });
 
 app.get('/', function(req, res) {
+
+	var mail = require('./app/utils/Mail');
+
+	mail.sendRegistrationEmail("agape@live.fr", "Heri Agape");
+
 	res.json({
 		message: 'Hello! The API is at http://localhost:' + port + '/api',
 		link: 'http://localhost:' + port + '/api'
@@ -69,8 +74,42 @@ var apiRoutes = require('./app/routes');
 app.use('/api', apiRoutes.User);
 
 
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
+  });
+  
+  // error handlers
+  
+  // development error handler
+  // will print stacktrace
+  if (app.get('env') === 'development') {
+	app.use(function(err, req, res, next) {
+	  res.status(err.status || 500);
+	  res.json({
+		message: err.message,
+		error: err
+	  });
+	});
+  }
+  
+  // production error handler
+  // no stacktraces leaked to user
+  app.use(function(err, req, res, next) {
+	res.status(err.status || 500);
+	res.json({
+	  message: err.message,
+	  error: {}
+	});
+  });
+
+
+
 app.listen(port);
 console.log('Magic happens at http://localhost:' + port);
 console.log(`Worker ${process.pid} started`);
-
 }
