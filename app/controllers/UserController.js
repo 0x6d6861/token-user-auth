@@ -15,9 +15,9 @@ module.exports = (function(req, res){
 
 
     function authenticate (req, res) {
-        let plainPassword = validator.escape(req.body.password);
-        let username = validator.escape(req.body.username);
-        let email = validator.escape(req.body.email);
+        let plainPassword = req.body.password;
+        let username = req.body.username;
+        let email = req.body.email;
 
         if(email && !validator.isEmail(email)){
             res.status(401).send({
@@ -64,9 +64,9 @@ module.exports = (function(req, res){
 
     function create(req, res){
 
-        let name = validator.escape(req.body.name);
-        let username = validator.escape(req.body.username);
-        let email = validator.escape(req.body.email);
+        let name = req.body.name;
+        let username = req.body.username;
+        let email = req.body.email;
         let password = req.body.password;
 
         if(email && !validator.isEmail(email)){
