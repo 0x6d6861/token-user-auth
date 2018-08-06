@@ -20,7 +20,7 @@ module.exports = (function(req, res){
         let email = req.body.email;
 
         if(email && !validator.isEmail(email)){
-            res.status(401).send({
+            return res.status(401).send({
                 success: false,
                 message: "Invalid email format"
             });
@@ -33,7 +33,7 @@ module.exports = (function(req, res){
             if (err) throw err;
     
             if (!user) {
-                res.json({ success: false, message: 'Authentication failed. User not found.' });
+                return res.json({ success: false, message: 'Authentication failed. User not found.' });
             } else if (user) {
 
                 user.checkPassword(plainPassword).then(function(data){
@@ -46,14 +46,14 @@ module.exports = (function(req, res){
                             expiresIn: 86400 // expires in 24 hours
                         });
         
-                        res.json({
+                        return res.json({
                             success: true,
                             message: 'Login Successful',
                             token: token,
                             user: user
                         });
                     }else{
-                        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+                        return res.json({ success: false, message: 'Authentication failed. Wrong password.' });
                     }
                 })
           
@@ -70,7 +70,7 @@ module.exports = (function(req, res){
         let password = req.body.password;
 
         if(email && !validator.isEmail(email)){
-            res.status(401).send({
+            return res.status(401).send({
                 success: false,
                 message: "Invalid email format"
             });
@@ -83,7 +83,7 @@ module.exports = (function(req, res){
             if (err) throw err;
     
             if (user) {
-                res.json({ success: false, message: 'User with the provided details already exists' });
+                return res.json({ success: false, message: 'User with the provided details already exists' });
             }
 
             var newUser = new User({ 
@@ -96,7 +96,7 @@ module.exports = (function(req, res){
     
             newUser.save(function(err) {
                 if (err) throw err;
-                res.json({ success: true, user: newUser });
+                return res.json({ success: true, user: newUser });
             });
         
 
